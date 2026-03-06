@@ -60,6 +60,16 @@ struct CharacterView: View {
                             Text("Shop Coming Soon") //Placeholder to be replaced by button for shop page
                         }
                         .buttonStyle(.bordered)
+                        
+                        NavigationLink(destination: MainMenuView()) {
+                            Text("Home")
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
+                        }
+                        
                     }
                     
                     Spacer()
