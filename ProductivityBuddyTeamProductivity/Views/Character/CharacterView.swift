@@ -51,7 +51,8 @@ struct CharacterView: View {
                     VStack(spacing: 15) {
                         
                         NavigationLink("Add Task") {
-                            Text("Add Task Page Coming Soon") //Placeholder until AddTaskView.swift is ready
+                            //Text("Add Task Page Coming Soon") //Placeholder until AddTaskView.swift is ready
+                            AddTaskView()
                         }
                         .buttonStyle(.borderedProminent)
                         
