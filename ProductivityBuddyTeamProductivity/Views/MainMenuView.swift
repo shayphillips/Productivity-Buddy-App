@@ -4,7 +4,9 @@
 //
 //  Created by Tyler Sams on 3/6/26.
 //
+// This is the MainMenu View. This is the starting point that the app opens up to and gives users three options, go to their daily tasks, their calender, and their character.
 
+// TO BE IMPLEMENTED: Stylizing, settings view and options(questionable?)
 import SwiftUI
 
 struct MainMenuView: View {
@@ -17,10 +19,29 @@ struct MainMenuView: View {
                 
                 Divider()
                 
+                NavigationLink("Daily Tasks") {
+                    DailyTasksView(date: Date())
+                }
+                .buttonStyle(.borderedProminent)
                 
+                NavigationLink("Calendar") {
+                    CalenderView()
+                }
+                .buttonStyle(.borderedProminent)
+                
+                NavigationLink("Character"){
+                    CharacterView()
+                }
+                .buttonStyle(.borderedProminent)
+                
+                Spacer()
             }
             .padding()
             .navigationTitle("Main Menu")
         }
     }
+}
+
+#Preview{
+    MainMenuView()
 }

@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct DailyTasksView: View {
-    
+    var date: Date
     //A few example tasks that can obviously be deleted later
     @State private var tasks: [Task] = [
         Task(
@@ -172,5 +172,5 @@ struct DailyTasksView: View {
 }
 
 #Preview {
-    DailyTasksView()
+    DailyTasksView(date:Date())
 }
