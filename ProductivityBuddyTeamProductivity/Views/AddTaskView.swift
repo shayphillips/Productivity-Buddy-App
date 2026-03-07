@@ -32,7 +32,7 @@ struct AddTaskView: View{
                       text: .constant(""))
             .textFieldStyle(.roundedBorder)
             
-            Text("Prioroty:")
+            Text("Priority:")
             TextField ("This will be a drop down menu", text: .constant(""))
                 .textFieldStyle(.roundedBorder)
             

@@ -56,6 +56,7 @@ func isToday(_ day: Int) -> Bool {
     let today = Calendar.current.component(.day, from: Date())
     return today == day
 }
+
 #Preview {
     CalenderView()
 }
