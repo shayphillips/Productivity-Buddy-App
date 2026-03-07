@@ -20,7 +20,7 @@ class AppViewModel: ObservableObject {
                  recurring: Bool = false) {
         let newTask = Task(
             title: title,
-            selectedCategory: category,
+            category: category,
             taskPriority: priority,
             timeRequired: timeRequired,
             pointsToAward: points,

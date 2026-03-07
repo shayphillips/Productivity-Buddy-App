@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct ProductivityBuddyTeamProductivityApp: App {
+    @StateObject private var appViewModel = AppViewModel()
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainMenuView()
+                .environmentObject(appViewModel)
         }
     }
 }

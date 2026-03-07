@@ -14,7 +14,7 @@ struct DailyTasksView: View {
     @State private var tasks: [Task] = [
         Task(
             title: "Finish Swift assignment",
-            selectedCategory: ["Study"],
+            category: ["Study"],
             taskPriority: 3,
             timeRequired: 60,
             pointsToAward: 25,
@@ -23,7 +23,7 @@ struct DailyTasksView: View {
         ),
         Task(
             title: "Go to the gym",
-            selectedCategory: ["Exercise"],
+            category: ["Exercise"],
             taskPriority: 2,
             timeRequired: 45,
             pointsToAward: 15,
@@ -32,7 +32,7 @@ struct DailyTasksView: View {
         ),
         Task(
             title: "Clean desk",
-            selectedCategory: ["Work"],
+            category: ["Work"],
             taskPriority: 1,
             timeRequired: 20,
             pointsToAward: 10,
@@ -92,7 +92,7 @@ struct DailyTasksView: View {
                                     .strikethrough(task.isComplete)
                                     .foregroundColor(task.isComplete ? .gray : .primary)
                                 
-                                Text("Category: \(categoryText(for: task.selectedCategory))")
+                                Text("Category: \(categoryText(for: task.category))")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                                 

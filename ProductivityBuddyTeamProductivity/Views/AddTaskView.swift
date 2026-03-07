@@ -11,6 +11,13 @@
 import SwiftUI
 
 struct AddTaskView: View{
+    @EnvironmentObject var appViewModel: AppViewModel
+
+    @State private var title: String = ""
+    @State private var categoryText: String = ""
+    @State private var priorityText: String = ""
+    @State private var date: Date = .now
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 20){
             Text("Add Task Screen")
@@ -38,7 +45,20 @@ struct AddTaskView: View{
             
             Spacer()
             
-            Button("Save Task(NOT FUNCTIONAL)"){
+            // This button will save the attributes of the task
+            Button("Save Task") {
+                let categories = categoryText
+                    .split(separator: ",")
+                    .map { $0.trimmingCharacters(in: .whitespaces) }
+
+                let priority = Int(priorityText) ?? 0
+
+                appViewModel.addTask(
+                    //Hardcoded above
+                    title: title,
+                    category: categories,
+                    priority: priority
+                )
             }
             .buttonStyle(.borderedProminent)
             Button("Cancel(NOT FUNCTIONAL)"){
