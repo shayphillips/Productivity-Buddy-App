@@ -7,17 +7,28 @@
 
 import Foundation
 
-enum RecurrenceFrequency: String {
-    case daily, weekly, monthly, weekdaysOnly
+enum RecurrenceFrequency: String, Codable{
+    case daily,
+         weekly,
+         monthly,
+         weekdaysOnly
 }
 
-struct Task: Identifiable {
+enum TaskCategory: String, CaseIterable, Codable {
+    case work,
+         personal,
+         hobbies,
+         fitness,
+         family,
+         other
+}
+
+struct Task: Identifiable, Codable {
     let id: UUID = UUID()
     var title: String
     var dueDate: Date = Date() // Sets date = to right now
-    
-    //var category: [String] = [] // (WIP) Select category from categories
-    
+    var category: String = "None"
+        
     //These are the properties of the recurring task
     var taskRecurring: Bool = false
     var recurringFrequency: RecurrenceFrequency?
@@ -26,9 +37,4 @@ struct Task: Identifiable {
     var timeRequired: Int? = 0
     var pointsToAward: Int = 0 //The # of points that are received when task is completed
     var isComplete: Bool = false
-   
 }
-
-
-
-

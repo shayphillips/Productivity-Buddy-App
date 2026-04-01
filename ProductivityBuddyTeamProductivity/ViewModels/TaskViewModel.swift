@@ -16,12 +16,14 @@ class TaskViewModel: ObservableObject{
                  points: Int = 0,
                  recurring: Bool = false,
                  frequency: RecurrenceFrequency? = nil,
+                 category: String = "None",
                  //recurringLength? Polishing stage (How long do you want this to recur?)
-                 dueDate: Date = Date()) {
+                 dueDate: Date = Date()){
         
         let newTask = Task(
             title: title,
             dueDate: dueDate,
+            category: category,
             taskRecurring: recurring,
             recurringFrequency: frequency,
             taskPriority: priority,
@@ -80,6 +82,33 @@ class TaskViewModel: ObservableObject{
                 pointsToAward: task.pointsToAward,
                 isComplete: false
             )
+        }
+    }
+    
+    private var savePath: URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return paths[0].appendingPathComponent("tasks.json")
+    }
+    
+    func saveTasks(){
+        do{
+            let encoder = JSONEncoder()
+            let data = try encoder.encode(tasks)
+            try data.write(to: savePath)
+            print("Task saved")
+        } catch{
+            print("There was an error saving the task")
+        }
+    }
+    func loadTasks(){
+        do{
+            let data = try Data(contentsOf: savePath)
+            let decoder = JSONDecoder()
+            let decodedTasks = try decoder.decode([Task].self, from: data)
+            self.tasks = decodedTasks
+            print("Tasks loaded")
+        } catch{
+            print("No existing task was found")
         }
     }
 }
