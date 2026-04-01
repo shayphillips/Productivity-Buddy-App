@@ -10,44 +10,55 @@ import SwiftUI
 
 struct DailyTasksView: View {
     var date: Date
+    
+    @StateObject var taskVM = TaskViewModel()
+    
     //A few example tasks that can obviously be deleted later
+    
+    /*
+    Note from Luke:
+     I have changed the implementation in the backend, so this doesn't work right now.
+     I am working on fixing this so you can have a working example.
+     
     @State private var tasks: [Task] = [
         Task(
             title: "Finish Swift assignment",
-            category: ["Study"],
+            //category: [],
+            taskRecurring: false,
+            //taskFrequency: Daily,
             taskPriority: 3,
             timeRequired: 60,
             pointsToAward: 25,
-            isComplete: false,
-            taskRecurring: false
+            isComplete: false
         ),
         Task(
             title: "Go to the gym",
-            category: ["Exercise"],
+            //category: [],
+            taskRecurring: true,
             taskPriority: 2,
             timeRequired: 45,
             pointsToAward: 15,
-            isComplete: true,
-            taskRecurring: true
+            isComplete: true
         ),
         Task(
             title: "Clean desk",
-            category: ["Work"],
+            //category: [],
+            taskRecurring: false,
             taskPriority: 1,
             timeRequired: 20,
             pointsToAward: 10,
-            isComplete: false,
-            taskRecurring: false
+            isComplete: false
         )
     ]
+     */
     
     var completedTasksCount: Int {
-        tasks.filter { $0.isComplete }.count
+        taskVM.tasks.filter { $0.isComplete }.count
     }
     
     //Still uncertain on points system, adjustments can be made to this as needed.
     var totalPointsEarned: Int {
-        tasks.filter { $0.isComplete }.map { $0.pointsToAward }.reduce(0, +)
+        taskVM.tasks.filter { $0.isComplete }.map { $0.pointsToAward }.reduce(0, +)
     }
     
     var body: some View {
@@ -59,7 +70,7 @@ struct DailyTasksView: View {
                         .font(.title2)
                         .fontWeight(.bold)
                     
-                    Text("Completed: \(completedTasksCount)/\(tasks.count)")
+                    Text("Completed: \(completedTasksCount)/\(taskVM.tasks.count)")
                         .font(.subheadline)
                     
                     Text("Points Earned: \(totalPointsEarned)")
@@ -73,58 +84,53 @@ struct DailyTasksView: View {
                 
                 //Basic layout for now
                 List {
-                    ForEach($tasks) { $task in
-                        HStack(alignment: .top, spacing: 12) {
-                            
-                            Button {
-                                task.isComplete.toggle()
-                            } label: {
-                                Image(systemName: task.isComplete ? "checkmark.circle.fill" : "circle")
-                                    .font(.title2)
-                                    .foregroundColor(task.isComplete ? .green : .gray)
-                            }
-                            .buttonStyle(.plain)
-                            
-                            
-                            VStack(alignment: .leading, spacing: 6) {
-                                Text(task.title)
-                                    .font(.headline)
-                                    .strikethrough(task.isComplete)
-                                    .foregroundColor(task.isComplete ? .gray : .primary)
+                    ForEach(taskVM.tasks) { task in
+                            HStack(alignment: .top, spacing: 12) {
                                 
-                                Text("Category: \(categoryText(for: task.category))")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
+                                Button {
+                                    // 2. Call your backend function using the task's ID.
+                                    taskVM.completeTask(id: task.id)
+                                } label: {
+                                    Image(systemName: task.isComplete ? "checkmark.circle.fill" : "circle")
+                                        .font(.title2)
+                                        .foregroundColor(task.isComplete ? .green : .gray)
+                                }
+                                .buttonStyle(.plain)
                                 
-                                Text("Priority: \(priorityText(for: task.taskPriority))")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                                
-                                if let time = task.timeRequired {
-                                    Text("Time Required: \(time) min")
+                                VStack(alignment: .leading, spacing: 6) {
+                                    Text(task.title)
+                                        .font(.headline)
+                                        .strikethrough(task.isComplete)
+                                        .foregroundColor(task.isComplete ? .gray : .primary)
+
+                                    Text("Priority: \(priorityText(for: task.taskPriority))")
                                         .font(.subheadline)
                                         .foregroundColor(.secondary)
+                                    
+                                    if let time = task.timeRequired {
+                                        Text("Time Required: \(time) min")
+                                            .font(.subheadline)
+                                            .foregroundColor(.secondary)
+                                    }
+                                    
+                                    Text("Points: \(task.pointsToAward)")
+                                        .font(.subheadline)
+                                        .foregroundColor(.green)
+                                    
+                                    if task.taskRecurring {
+                                        Text("Recurring Task")
+                                            .font(.caption)
+                                            .fontWeight(.semibold)
+                                            .padding(.horizontal, 8)
+                                            .padding(.vertical, 4)
+                                            .background(Color.orange.opacity(0.2))
+                                            .cornerRadius(8)
+                                    }
                                 }
-                                
-                                Text("Points: \(task.pointsToAward)")
-                                    .font(.subheadline)
-                                    .foregroundColor(.green)
-                                
-                                if task.taskRecurring {
-                                    Text("Recurring Task")
-                                        .font(.caption)
-                                        .fontWeight(.semibold)
-                                        .padding(.horizontal, 8)
-                                        .padding(.vertical, 4)
-                                        .background(Color.orange.opacity(0.2))
-                                        .cornerRadius(8)
-                                }
+                                Spacer()
                             }
-                            
-                            
-                            Spacer()
+                            .padding(.vertical, 6)
                         }
-                        .padding(.vertical, 6)
                     }
                 }
                 .listStyle(.plain)
@@ -169,8 +175,9 @@ struct DailyTasksView: View {
             return "Unknown"
         }
     }
-}
+
 
 #Preview {
     DailyTasksView(date:Date())
 }
+

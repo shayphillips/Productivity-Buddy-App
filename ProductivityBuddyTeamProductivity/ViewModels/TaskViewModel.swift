@@ -1,0 +1,86 @@
+//
+//  TaskViewModel.swift
+//  ProductivityBuddyTeamProductivity
+//
+//  Created by Luke Sturm on 4/1/26.
+//
+import SwiftUI
+import Combine
+
+class TaskViewModel: ObservableObject{
+    @Published var tasks: [Task] = []
+    
+    func addTask(title: String,
+                 priority: Int = 0,
+                 timeRequired: Int? = nil,
+                 points: Int = 0,
+                 recurring: Bool = false,
+                 frequency: RecurrenceFrequency? = nil,
+                 //recurringLength? Polishing stage (How long do you want this to recur?)
+                 dueDate: Date = Date()) {
+        
+        let newTask = Task(
+            title: title,
+            dueDate: dueDate,
+            taskRecurring: recurring,
+            recurringFrequency: frequency,
+            taskPriority: priority,
+            timeRequired: timeRequired,
+            pointsToAward: points,
+            isComplete: false
+        )
+        tasks.append(newTask)
+    }
+
+    func completeTask(id: UUID) {
+        // Find the task by id and mark it complete
+        if let index = tasks.firstIndex(where: { $0.id == id }) {
+            tasks[index].isComplete = true
+            
+            if tasks[index].taskRecurring{
+                handleRecurrence(for: tasks[index])
+            }
+        }
+    }
+    private func handleRecurrence(for task: Task) {
+        let calendar = Calendar.current
+        var dateComponent = DateComponents()
+        
+        switch task.recurringFrequency {
+        case .daily:
+            dateComponent.day = 1
+        case .weekly:
+            dateComponent.weekOfYear = 1
+        case .monthly:
+            dateComponent.month = 1
+        case .weekdaysOnly:
+            let weekday = calendar.component(.weekday, from: task.dueDate)
+            if(weekday == 6){ // If the day is Friday
+                dateComponent.day = 3 // Monday (We are adding days to the number, so 3 days from Fri is Mon)
+            }
+            else if(weekday == 7){ // If the day is Saturday
+                dateComponent.day = 2 // Monday (We are adding days to the number, so 2 days from Sat is Mon)
+            }
+            else{ // Day is not  Friday or Saturday
+                dateComponent.day = 1 // Add a task tommorrow
+            }
+        case .none:
+            return
+        }
+        
+        if let nextDate = calendar.date(byAdding: dateComponent, to: task.dueDate) {
+            // Duplicate the recurring task with all the same attributes except dueDate & id
+            let taskDuplicate = Task(
+                title: task.title,
+                dueDate: Calendar.current.date(byAdding: .day, value: 1, to: task.dueDate)!,
+                taskRecurring: task.taskRecurring,
+                recurringFrequency: task.recurringFrequency,
+                taskPriority: task.taskPriority,
+                timeRequired: task.timeRequired,
+                pointsToAward: task.pointsToAward,
+                isComplete: false
+            )
+        }
+    }
+}
+

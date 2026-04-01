@@ -53,10 +53,10 @@ struct AddTaskView: View{
 
                 let priority = Int(priorityText) ?? 0
 
-                appViewModel.addTask(
+                appViewModel.taskVM.addTask(
                     //Hardcoded above
                     title: title,
-                    category: categories,
+                    //category: categories,
                     priority: priority
                 )
             }
