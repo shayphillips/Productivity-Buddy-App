@@ -10,6 +10,9 @@
 import SwiftUI
 
 struct MainMenuView: View {
+    
+    @State private var tasks: [Task] = []
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 30) {
@@ -20,12 +23,12 @@ struct MainMenuView: View {
                 Divider()
                 
                 NavigationLink("Daily Tasks") {
-                    DailyTasksView(date: Date())
+                    DailyTasksView(tasks: $tasks, selectedDate: Date())
                 }
                 .buttonStyle(.borderedProminent)
                 
                 NavigationLink("Calendar") {
-                    CalenderView()
+                    CalenderView(tasks: $tasks)
                 }
                 .buttonStyle(.borderedProminent)
                 

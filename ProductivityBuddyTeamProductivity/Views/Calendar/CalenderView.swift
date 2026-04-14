@@ -11,13 +11,15 @@
 import SwiftUI
 
 struct CalenderView: View {
+    @Binding var tasks: [Task]
+    
     let columns = Array(repeating: GridItem(.flexible()), count: 7)
     let days = Array(1...31)
     
     var body: some View {
         NavigationStack {
-            VStack{
-                Text("Calender")
+            VStack {
+                Text("Calendar")
                     .font(.largeTitle)
                     .bold()
                 
@@ -25,7 +27,10 @@ struct CalenderView: View {
                     ForEach(days, id: \.self) { day in
                         
                         NavigationLink(
-                            destination: DailyTasksView(date: dateForDay(day))
+                            destination: DailyTasksView(
+                                tasks: $tasks,
+                                selectedDate: dateForDay(day)
+                            )
                         ) {
                             Text("\(day)")
                                 .frame(width: 40, height: 40)
@@ -33,30 +38,30 @@ struct CalenderView: View {
                                     isToday(day)
                                     ? Color.blue.opacity(0.3)
                                     : Color.gray.opacity(0.2)
-                            
                                 )
                                 .clipShape(Circle())
                         }
                     }
                 }
+                
                 Spacer()
             }
             .padding()
         }
     }
-}
-
-func dateForDay (_ day: Int) -> Date {
-    var components = Calendar.current.dateComponents ([.year, .month, .day], from: Date())
-    components.day = day
-    return Calendar.current.date(from: components) ?? Date()
-}
-
-func isToday(_ day: Int) -> Bool {
-    let today = Calendar.current.component(.day, from: Date())
-    return today == day
+    
+    func dateForDay(_ day: Int) -> Date {
+        var components = Calendar.current.dateComponents([.year, .month, .day], from: Date())
+        components.day = day
+        return Calendar.current.date(from: components) ?? Date()
+    }
+    
+    func isToday(_ day: Int) -> Bool {
+        let today = Calendar.current.component(.day, from: Date())
+        return today == day
+    }
 }
 
 #Preview {
-    CalenderView()
+    CalenderView(tasks: .constant([]))
 }
