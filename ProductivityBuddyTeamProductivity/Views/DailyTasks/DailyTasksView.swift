@@ -34,138 +34,162 @@ struct DailyTasksView: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        ZStack {
+            Color("Background")
+                .ignoresSafeArea()
             
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Tasks for \(formattedDate(selectedDate))")
-                    .font(.title2)
-                    .fontWeight(.bold)
+            VStack(alignment: .leading, spacing: 16) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Tasks for \(formattedDate(selectedDate))")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundColor(Color("Accent"))
+                    
+                    Text("Completed: \(completedTasksCount)/\(tasksForSelectedDay.count)")
+                        .font(.subheadline)
+                        .foregroundColor(Color("Accent"))
+                    
+                    Text("Points Earned: \(totalPointsEarned)")
+                        .font(.subheadline)
+                        .foregroundColor(.green)
+                }
+                .padding()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                //.background(Color.blue.opacity(0.1))
+                .cornerRadius(12)
                 
-                Text("Completed: \(completedTasksCount)/\(tasksForSelectedDay.count)")
-                    .font(.subheadline)
-                
-                Text("Points Earned: \(totalPointsEarned)")
-                    .font(.subheadline)
-                    .foregroundColor(.green)
+                List {
+                    Section("Active Tasks") {
+                        if activeTasks.isEmpty {
+                            Text("No active tasks for this day.")
+                                .foregroundColor(.secondary)
+                                .listRowBackground(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .fill(Color("PrimaryColor"))
+                                )
+                        } else {
+                            ForEach(activeTasks) { task in
+                                taskRow(for: task)
+                            }
+                        }
+                    }
+                    .foregroundColor(Color("Accent"))
+                    
+                    Section("Completed Tasks") {
+                        if completedTasks.isEmpty {
+                            Text("No completed tasks for this day.")
+                                .foregroundColor(.secondary)
+                                .listRowBackground(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .fill(Color("PrimaryColor"))
+                                )
+                        } else {
+                            ForEach(completedTasks) { task in
+                                taskRow(for: task)
+                            }
+                        }
+                    }
+                    .foregroundColor(Color("Accent"))
+                }
+                .scrollContentBackground(.hidden)
+                //.background(Color("PrimaryColor"))
+                .listStyle(.insetGrouped)
             }
             .padding()
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color.blue.opacity(0.1))
-            .cornerRadius(12)
-            
-            List {
-                Section("Active Tasks") {
-                    if activeTasks.isEmpty {
-                        Text("No active tasks for this day.")
-                            .foregroundColor(.secondary)
-                    } else {
-                        ForEach(activeTasks) { task in
-                            taskRow(for: task)
-                        }
-                    }
-                }
-                
-                Section("Completed Tasks") {
-                    if completedTasks.isEmpty {
-                        Text("No completed tasks for this day.")
-                            .foregroundColor(.secondary)
-                    } else {
-                        ForEach(completedTasks) { task in
-                            taskRow(for: task)
-                        }
-                    }
-                }
-            }
-            .listStyle(.insetGrouped)
+            .navigationTitle("Daily Tasks")
         }
-        .padding()
-        .navigationTitle("Daily Tasks")
     }
-    
-    @ViewBuilder
-    func taskRow(for task: Task) -> some View {
-        HStack(alignment: .top, spacing: 12) {
-            
-            Button {
-                toggleTaskCompletion(taskID: task.id)
-            } label: {
-                Image(systemName: task.isComplete ? "checkmark.circle.fill" : "circle")
-                    .font(.title2)
-                    .foregroundColor(task.isComplete ? .green : .gray)
-            }
-            .buttonStyle(.plain)
-            
-            VStack(alignment: .leading, spacing: 6) {
-                Text(task.title)
-                    .font(.headline)
-                    .foregroundColor(task.isComplete ? .gray : .primary)
+        
+        @ViewBuilder
+        func taskRow(for task: Task) -> some View {
+            HStack(alignment: .top, spacing: 12) {
                 
-                Text("Category: \(task.category)")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
+                Button {
+                    toggleTaskCompletion(taskID: task.id)
+                } label: {
+                    Image(systemName: task.isComplete ? "checkmark.circle.fill" : "circle")
+                        .font(.title2)
+                        .foregroundColor(task.isComplete ? .green : .gray)
+                }
+                .buttonStyle(.plain)
                 
-                Text("Priority: \(priorityText(for: task.taskPriority))")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                
-                if let time = task.timeRequired {
-                    Text("Time Required: \(time) min")
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(task.title)
+                        .font(.headline)
+                        .foregroundColor(task.isComplete ? .gray : .primary)
+                    
+                    Text("Category: \(task.category)")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
+                    
+                    Text("Priority: \(priorityText(for: task.taskPriority))")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    
+                    if let time = task.timeRequired {
+                        Text("Time Required: \(time) min")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                    
+                    Text("Points: \(task.pointsToAward)")
+                        .font(.subheadline)
+                        .foregroundColor(.green)
+                    
+                    if task.taskRecurring {
+                        Text("Recurring: \(recurrenceText(task.recurringFrequency))")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(Color.orange.opacity(0.2))
+                            .cornerRadius(8)
+                    }
                 }
                 
-                Text("Points: \(task.pointsToAward)")
-                    .font(.subheadline)
-                    .foregroundColor(.green)
-                
-                if task.taskRecurring {
-                    Text("Recurring: \(recurrenceText(task.recurringFrequency))")
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(Color.orange.opacity(0.2))
-                        .cornerRadius(8)
-                }
+                Spacer()
             }
-            
-            Spacer()
+            .padding(.vertical, 6)
+            .padding(.horizontal, 8)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color("PrimaryColor"))
+            )
         }
-        .padding(.vertical, 6)
-    }
-    
-    func toggleTaskCompletion(taskID: UUID) {
-        if let index = tasks.firstIndex(where: { $0.id == taskID }) {
-            tasks[index].isComplete.toggle()
+        
+        func toggleTaskCompletion(taskID: UUID) {
+            if let index = tasks.firstIndex(where: { $0.id == taskID }) {
+                tasks[index].isComplete.toggle()
+            }
+        }
+        
+        func formattedDate(_ date: Date) -> String {
+            let formatter = DateFormatter()
+            formatter.dateStyle = .full
+            return formatter.string(from: date)
+        }
+        
+        func priorityText(for priority: Int) -> String {
+            switch priority {
+            case 0: return "No Rush"
+            case 1: return "Low"
+            case 2: return "Medium"
+            case 3: return "Urgent"
+            default: return "Unknown"
+            }
+        }
+        
+        func recurrenceText(_ frequency: RecurrenceFrequency?) -> String {
+            switch frequency {
+            case .daily: return "Daily"
+            case .weekly: return "Weekly"
+            case .monthly: return "Monthly"
+            case .weekdaysOnly: return "Weekdays Only"
+            case nil: return "Custom"
+            }
         }
     }
-    
-    func formattedDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .full
-        return formatter.string(from: date)
-    }
-    
-    func priorityText(for priority: Int) -> String {
-        switch priority {
-        case 0: return "No Rush"
-        case 1: return "Low"
-        case 2: return "Medium"
-        case 3: return "Urgent"
-        default: return "Unknown"
-        }
-    }
-    
-    func recurrenceText(_ frequency: RecurrenceFrequency?) -> String {
-        switch frequency {
-        case .daily: return "Daily"
-        case .weekly: return "Weekly"
-        case .monthly: return "Monthly"
-        case .weekdaysOnly: return "Weekdays Only"
-        case nil: return "Custom"
-        }
-    }
-}
+
 
 #Preview {
     DailyTasksView(tasks: .constant([]), selectedDate: Date())
