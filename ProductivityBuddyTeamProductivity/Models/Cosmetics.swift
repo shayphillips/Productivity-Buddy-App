@@ -7,10 +7,17 @@
 
 import Foundation
 
-public struct Cosmetics {
-    public var cosmeticName: String
-    
-    public init(text: String) {
-        self.cosmeticName = text
-    }
+enum CosmeticCategory: String, CaseIterable, Hashable {
+    case hat
+    case face
+    case body
+    case room
+}
+
+struct CosmeticItem: Identifiable, Hashable {
+    let id = UUID()
+    let name: String
+    let category: CosmeticCategory
+    let imageName: String
+    let price: Int
 }

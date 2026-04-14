@@ -10,7 +10,7 @@ import SwiftUI
 
 struct CharacterView: View {
     
-    @State private var points: Int = 0 //placeholder
+    @EnvironmentObject var viewModel:BuddyViewModel //Whole app should now have shared points, cosmetics, and equpped items
     
     var body: some View {
             NavigationStack {
@@ -21,7 +21,7 @@ struct CharacterView: View {
                         .fontWeight(.bold)
                     
                     // Points display
-                    Text("Points: \(points)")
+                    Text("Points: \(viewModel.points)")
                         .font(.title2)
                         .foregroundColor(.green)
                     
@@ -56,9 +56,8 @@ struct CharacterView: View {
                         }
                         .buttonStyle(.borderedProminent)
                         
-                        NavigationLink("Accessory Shop") {
-                            Text("Shop Coming Soon") //Placeholder to be replaced by button for shop page
-                        }
+                        NavigationLink("Cosmetics Shop") {
+                            ShopView()                        }
                         .buttonStyle(.bordered)
                         
                         NavigationLink(destination: MainMenuView()) {
