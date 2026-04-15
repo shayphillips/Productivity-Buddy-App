@@ -11,7 +11,8 @@ import SwiftUI
 
 struct MainMenuView: View {
     
-    @State private var tasks: [Task] = []
+    @EnvironmentObject var appViewModel: AppViewModel
+    
     
     var body: some View {
             NavigationStack {
@@ -35,7 +36,8 @@ struct MainMenuView: View {
                     Divider()
                     
                     NavigationLink {
-                        DailyTasksView(tasks: $tasks, selectedDate: Date())
+                        DailyTasksView(selectedDate: Date())
+                            .environmentObject(appViewModel)
                     } label: {
                         Text("Today's Tasks")
                             .font(.title2)
@@ -65,9 +67,24 @@ struct MainMenuView: View {
                     }
 
                     NavigationLink {
-                        CalenderView(tasks: $tasks)
+                        CalenderView()
+                            .environmentObject(appViewModel)
                     } label: {
                         Text("Calendar")
+                            .font(.title2)
+                            .bold()
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color("PrimaryColor"))
+                            .foregroundColor(.black)
+                            .cornerRadius(12)
+                            .shadow(color: .black.opacity(0.7), radius: 9, x: 0, y: 3) //shadow will help text stand out if the image is added
+                    }
+                    
+                    NavigationLink {
+                        AddTaskView()
+                    } label: {
+                        Text("Add Task")
                             .font(.title2)
                             .bold()
                             .padding()
@@ -91,4 +108,5 @@ struct MainMenuView: View {
 
 #Preview{
     MainMenuView()
+        .environmentObject(AppViewModel())
 }

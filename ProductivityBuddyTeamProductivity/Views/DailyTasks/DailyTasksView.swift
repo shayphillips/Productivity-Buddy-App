@@ -10,8 +10,12 @@ import SwiftUI
 
 struct DailyTasksView: View {
     
-    @Binding var tasks: [Task]
-    let selectedDate: Date
+    @EnvironmentObject var appViewModel: AppViewModel
+        let selectedDate: Date
+        
+        var tasks: [Task] {
+            appViewModel.taskVM.tasks
+        }
     
     var tasksForSelectedDay: [Task] {
         tasks.filter { Calendar.current.isDate($0.dueDate, inSameDayAs: selectedDate) }
@@ -152,8 +156,9 @@ struct DailyTasksView: View {
     }
     
     func toggleTaskCompletion(taskID: UUID) {
-        if let index = tasks.firstIndex(where: { $0.id == taskID }) {
-            tasks[index].isComplete.toggle()
+        if let index = appViewModel.taskVM.tasks.firstIndex(where: { $0.id == taskID }) {
+            appViewModel.taskVM.tasks[index].isComplete.toggle()
+            appViewModel.taskVM.saveTasks()
         }
     }
     
@@ -199,7 +204,8 @@ struct DailyTasksView: View {
 
 
 #Preview {
-    DailyTasksView(tasks: .constant([]), selectedDate: Date())
+    DailyTasksView(selectedDate: Date())
+        .environmentObject(AppViewModel())
 }
 
 

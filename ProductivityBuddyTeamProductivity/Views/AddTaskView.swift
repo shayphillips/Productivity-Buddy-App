@@ -12,54 +12,86 @@ import SwiftUI
 
 struct AddTaskView: View{
     @EnvironmentObject var appViewModel: AppViewModel
-
+    @Environment(\.dismiss) private var dismiss
+    
     @State private var title: String = ""
     @State private var category: TaskCategory? = nil
     @State private var priority: Int = 0
     @State private var date: Date = .now
+    @State private var pointsToAward: Int = 0
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 20){
-            Text("Add Task Screen")
-                .font(.title)
-                .bold()
+        ZStack{
+            Color("Background")
+                .ignoresSafeArea()
             
-            Divider ()
-            
-            Text("Task Name:")
-            TextField("Task name will go here", text: .constant(""))
-                .textFieldStyle(.roundedBorder)
-            
-            // Drop down for categories from TaskCategory
-            Text("Category:")
-            TextField("This will be a drop down menu", text: .constant(""))
-                .textFieldStyle(.roundedBorder)
-            
-            // Date selection tool
-            Text("Date:")
-            TextField("The Date that task needs to be done will go here",
-                      text: .constant(""))
-            .textFieldStyle(.roundedBorder)
-            
-            // Priority drop down 0 - 3 options
-            Text("Priority:")
-            TextField ("This will be a drop down menu", text: .constant(""))
-                .textFieldStyle(.roundedBorder)
-            
-            Spacer()
-            
-            // This button will save the attributes of the task
-            Button("Save Task") {
+            Form {
+                Section("Task Info") {
+                    TextField("Enter task name", text: $title)
+                        .foregroundStyle(Color("Accent"))
+                        .bold()
+                    
+                    DatePicker(
+                        "Due Date",
+                        selection: $date,
+                        displayedComponents: [.date, .hourAndMinute]
+                    )
+                    
+                    Picker("Priority", selection: $priority) {
+                        Text("0 - No Rush").tag(0)
+                        Text("1 - Low").tag(1)
+                        Text("2 - Medium").tag(2)
+                        Text("3 - Urgent").tag(3)
+                    }
+                    
+                    Stepper("Points: \(pointsToAward)", value: $pointsToAward, in: 0...500)
+                }
+                .listRowBackground(Color("PrimaryColor").opacity(0.3))
                 
-                appViewModel.taskVM.addTask(newTask: Task(title: title, dueDate: date, taskPriority: priority))
+                Section {
+                    Button {
+                        let newTask = Task(
+                            title: title,
+                            dueDate: date,
+                            taskPriority: priority,
+                            pointsToAward: pointsToAward,
+                            isComplete: false
+                        )
+                        
+                        appViewModel.taskVM.addTask(newTask: newTask)
+                        appViewModel.taskVM.saveTasks()
+                        dismiss()
+                    } label: {
+                        Text("Save Task")
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? Color.gray.opacity(0.4) : Color("PrimaryColor"))
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
+                    }
+                    .disabled(title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    .listRowBackground(Color.clear)
+                    
+                    Button {
+                        dismiss()
+                    } label: {
+                        Text("Cancel")
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.red.opacity(0.85))
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
+                    }
+                    .listRowBackground(Color.clear)
+                }
             }
-            .buttonStyle(.borderedProminent)
-            Button("Cancel(NOT FUNCTIONAL)"){
-            }
-            
+            .navigationTitle("Add Task")
+            .scrollContentBackground(.hidden)
+            .foregroundStyle(Color("Accent"))
         }
-        .padding()
-        .navigationTitle("Add Task")
+        
     }
 }
 

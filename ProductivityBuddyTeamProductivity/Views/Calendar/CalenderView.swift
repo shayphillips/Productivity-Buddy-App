@@ -11,43 +11,40 @@
 import SwiftUI
 
 struct CalenderView: View {
-    @Binding var tasks: [Task]
+    @EnvironmentObject var appViewModel: AppViewModel
     
     let columns = Array(repeating: GridItem(.flexible()), count: 7)
     let days = Array(1...31)
     
     var body: some View {
-        NavigationStack {
-            VStack {
-                Text("Calendar")
-                    .font(.largeTitle)
-                    .bold()
-                
-                LazyVGrid(columns: columns, spacing: 20) {
-                    ForEach(days, id: \.self) { day in
-                        
-                        NavigationLink(
-                            destination: DailyTasksView(
-                                tasks: $tasks,
-                                selectedDate: dateForDay(day)
+        VStack {
+            Text("Calendar")
+                .font(.largeTitle)
+                .bold()
+            
+            LazyVGrid(columns: columns, spacing: 20) {
+                ForEach(days, id: \.self) { day in
+                    NavigationLink(
+                        destination: DailyTasksView(
+                            selectedDate: dateForDay(day)
+                        )
+                        .environmentObject(appViewModel)
+                    ) {
+                        Text("\(day)")
+                            .frame(width: 40, height: 40)
+                            .background(
+                                isToday(day)
+                                ? Color.blue.opacity(0.3)
+                                : Color.gray.opacity(0.2)
                             )
-                        ) {
-                            Text("\(day)")
-                                .frame(width: 40, height: 40)
-                                .background(
-                                    isToday(day)
-                                    ? Color.blue.opacity(0.3)
-                                    : Color.gray.opacity(0.2)
-                                )
-                                .clipShape(Circle())
-                        }
+                            .clipShape(Circle())
                     }
                 }
-                
-                Spacer()
             }
-            .padding()
+            
+            Spacer()
         }
+        .padding()
     }
     
     func dateForDay(_ day: Int) -> Date {
@@ -63,5 +60,8 @@ struct CalenderView: View {
 }
 
 #Preview {
-    CalenderView(tasks: .constant([]))
+    NavigationStack {
+        CalenderView()
+            .environmentObject(AppViewModel())
+    }
 }
