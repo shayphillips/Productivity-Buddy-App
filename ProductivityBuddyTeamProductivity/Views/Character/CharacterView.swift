@@ -10,11 +10,11 @@ import SwiftUI
 
 struct CharacterView: View {
     
-    @EnvironmentObject var viewModel:BuddyViewModel //Whole app should now have shared points, cosmetics, and equpped items
+    @EnvironmentObject var viewModel: BuddyViewModel //Whole app should now have shared points, cosmetics, and equpped items
     
     var body: some View {
             NavigationStack {
-                VStack(spacing: 25) {
+                VStack(spacing: 20) {
                     
                     Text("Productivity Buddy")
                         .font(.largeTitle)
@@ -25,14 +25,11 @@ struct CharacterView: View {
                         .font(.title2)
                         .foregroundColor(.green)
                     
-                    // Placeholder teddy bear
+                    
                     ZStack {
-                        Circle()
-                            .fill(Color.brown.opacity(0.3))
-                            .frame(width: 200, height: 200)
-                        
-                        Text("Bear")
-                            .font(.system(size: 80))
+                        Image("Bear_Character")
+                            .resizable()
+                            .scaledToFill()
                     }
                     
                     // Accessories placeholder, I am still extremely uncertain of how this will work
@@ -41,6 +38,8 @@ struct CharacterView: View {
                             .font(.headline)
                         
                         HStack(spacing: 20) {
+                            // get from buddyCosmetics set
+                            
                             accessorySlot("acc1")
                             accessorySlot("acc2")
                             accessorySlot("acc3")
@@ -53,11 +52,14 @@ struct CharacterView: View {
                         NavigationLink("Add Task") {
                             //Text("Add Task Page Coming Soon") //Placeholder until AddTaskView.swift is ready
                             AddTaskView()
+                                .environmentObject(AppViewModel())
                         }
                         .buttonStyle(.borderedProminent)
                         
                         NavigationLink("Cosmetics Shop") {
-                            ShopView()                        }
+                            ShopView()
+                                .environmentObject(BuddyViewModel())
+                        }
                         .buttonStyle(.bordered)
                         
                         NavigationLink(destination: MainMenuView()) {
@@ -78,17 +80,20 @@ struct CharacterView: View {
         }
     }
 
-    func accessorySlot(_ icon: String) -> some View {
+    func accessorySlot(_ image: String) -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: 12)
                 .fill(Color.gray.opacity(0.2))
                 .frame(width: 70, height: 70)
             
-            Text(icon)
-                .font(.largeTitle)
+            Image(image)
+                .resizable()
+                .scaledToFit()
+            
     }
 }
 
 #Preview {
     CharacterView()
+        .environmentObject(BuddyViewModel())
 }

@@ -15,9 +15,13 @@ struct MainMenuView: View {
     
     var body: some View {
             NavigationStack {
-                ZStack { //If the plan is still to have an image in the background, this is where it will go!
-                    Color("Background")
+                ZStack {
+                    Color("Accent")
                         .ignoresSafeArea()
+                    Image("Homepage_Tree")
+                            .resizable()
+                            .scaledToFill()
+                            .ignoresSafeArea()
                 VStack(spacing: 30) {
                     Text("Bearable")
                         .font(.system(size: 64, weight: .heavy, design: .rounded))
@@ -25,6 +29,7 @@ struct MainMenuView: View {
                         .tracking(2)
                         .shadow(color: .black.opacity(0.7), radius: 9, x: 0, y: 3) //shadow will help text stand out if the image is added
                         .padding(30)
+                        .padding(.top, 60)
                         .foregroundColor(Color("Accent"))
                     
                     Divider()
@@ -33,6 +38,7 @@ struct MainMenuView: View {
                         DailyTasksView(tasks: $tasks, selectedDate: Date())
                     } label: {
                         Text("Today's Tasks")
+                            .font(.title2)
                             .bold()
                             .padding()
                             .frame(maxWidth: .infinity)
@@ -45,8 +51,10 @@ struct MainMenuView: View {
                     
                     NavigationLink {
                         CharacterView()
+                            .environmentObject(BuddyViewModel())
                     } label: {
                         Text("Character")
+                            .font(.title2)
                             .bold()
                             .padding()
                             .frame(maxWidth: .infinity)
@@ -60,6 +68,7 @@ struct MainMenuView: View {
                         CalenderView(tasks: $tasks)
                     } label: {
                         Text("Calendar")
+                            .font(.title2)
                             .bold()
                             .padding()
                             .frame(maxWidth: .infinity)

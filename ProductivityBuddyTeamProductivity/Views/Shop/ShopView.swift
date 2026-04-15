@@ -52,3 +52,8 @@ struct ShopView: View {
         }
     }
 }
+
+#Preview {
+    ShopView()
+        .environmentObject(BuddyViewModel())
+}

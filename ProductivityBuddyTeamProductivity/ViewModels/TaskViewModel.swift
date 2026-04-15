@@ -10,27 +10,8 @@ import Combine
 class TaskViewModel: ObservableObject{
     @Published var tasks: [Task] = []
     
-    func addTask(title: String,
-                 priority: Int = 0,
-                 timeRequired: Int? = nil,
-                 points: Int = 0,
-                 recurring: Bool = false,
-                 frequency: RecurrenceFrequency? = nil,
-                 category: String = "None",
-                 //recurringLength? Polishing stage (How long do you want this to recur?)
-                 dueDate: Date = Date()){
-        
-        let newTask = Task(
-            title: title,
-            dueDate: dueDate,
-            category: category,
-            taskRecurring: recurring,
-            recurringFrequency: frequency,
-            taskPriority: priority,
-            timeRequired: timeRequired,
-            pointsToAward: points,
-            isComplete: false
-        )
+    func addTask(newTask: Task){
+        // Pass a task instead of task properties to simplfy function
         tasks.append(newTask)
     }
 
@@ -76,11 +57,9 @@ class TaskViewModel: ObservableObject{
                 title: task.title,
                 dueDate: Calendar.current.date(byAdding: .day, value: 1, to: task.dueDate)!,
                 taskRecurring: task.taskRecurring,
-                recurringFrequency: task.recurringFrequency,
                 taskPriority: task.taskPriority,
-                timeRequired: task.timeRequired,
                 pointsToAward: task.pointsToAward,
-                isComplete: false
+                isComplete: task.isComplete
             )
         }
     }

@@ -15,9 +15,8 @@ class BuddyViewModel: ObservableObject{
     //Shop Items
     //This is where you add new items
     @Published var shopItems: [CosmeticItem] = [
-        CosmeticItem(name: "Sword", category: .body,imageName: "Placeholder", price:200)
-        //Also add "imageName: " for the image of the item. But this is the structure for all items to be implemented
-        
+        CosmeticItem(name: "Crown", category: .body, imageName: "CItem_Crown", price:200),
+        CosmeticItem(name: "Sunglasses", category: .body, imageName: "CItem_Sunglasses", price:200)
     ]
     func purchaseItem(_ item: CosmeticItem) {
         guard points >= item.price else { return }

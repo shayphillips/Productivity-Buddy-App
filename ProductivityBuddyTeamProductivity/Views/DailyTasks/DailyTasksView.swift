@@ -99,96 +99,103 @@ struct DailyTasksView: View {
             .navigationTitle("Daily Tasks")
         }
     }
-        
-        @ViewBuilder
-        func taskRow(for task: Task) -> some View {
-            HStack(alignment: .top, spacing: 12) {
+    
+    @ViewBuilder
+    func taskRow(for task: Task) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            
+            Button {
+                toggleTaskCompletion(taskID: task.id)
+            } label: {
+                Image(systemName: task.isComplete ? "checkmark.circle.fill" : "circle")
+                    .font(.title2)
+                    .foregroundColor(task.isComplete ? .green : .gray)
+            }
+            .buttonStyle(.plain)
+            
+            VStack(alignment: .leading, spacing: 6) {
+                Text(task.title)
+                    .font(.headline)
+                    .foregroundColor(task.isComplete ? .gray : .primary)
                 
-                Button {
-                    toggleTaskCompletion(taskID: task.id)
-                } label: {
-                    Image(systemName: task.isComplete ? "checkmark.circle.fill" : "circle")
-                        .font(.title2)
-                        .foregroundColor(task.isComplete ? .green : .gray)
+                Text("Category: \(categoryText(task.category))")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                
+                Text("Priority: \(priorityText(for: task.taskPriority))")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                
+                Text("Points: \(task.pointsToAward)")
+                    .font(.subheadline)
+                    .foregroundColor(.green)
+                
+                if task.taskRecurring {
+                    Text("Recurring: \(recurrenceText(task.recurringFrequency))")
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Color.orange.opacity(0.2))
+                        .cornerRadius(8)
                 }
-                .buttonStyle(.plain)
-                
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(task.title)
-                        .font(.headline)
-                        .foregroundColor(task.isComplete ? .gray : .primary)
-                    
-                    Text("Category: \(task.category)")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                    
-                    Text("Priority: \(priorityText(for: task.taskPriority))")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                    
-                    if let time = task.timeRequired {
-                        Text("Time Required: \(time) min")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                    }
-                    
-                    Text("Points: \(task.pointsToAward)")
-                        .font(.subheadline)
-                        .foregroundColor(.green)
-                    
-                    if task.taskRecurring {
-                        Text("Recurring: \(recurrenceText(task.recurringFrequency))")
-                            .font(.caption)
-                            .fontWeight(.semibold)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 4)
-                            .background(Color.orange.opacity(0.2))
-                            .cornerRadius(8)
-                    }
-                }
-                
-                Spacer()
             }
-            .padding(.vertical, 6)
-            .padding(.horizontal, 8)
-            .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(Color("PrimaryColor"))
-            )
+            
+            Spacer()
         }
-        
-        func toggleTaskCompletion(taskID: UUID) {
-            if let index = tasks.firstIndex(where: { $0.id == taskID }) {
-                tasks[index].isComplete.toggle()
-            }
-        }
-        
-        func formattedDate(_ date: Date) -> String {
-            let formatter = DateFormatter()
-            formatter.dateStyle = .full
-            return formatter.string(from: date)
-        }
-        
-        func priorityText(for priority: Int) -> String {
-            switch priority {
-            case 0: return "No Rush"
-            case 1: return "Low"
-            case 2: return "Medium"
-            case 3: return "Urgent"
-            default: return "Unknown"
-            }
-        }
-        
-        func recurrenceText(_ frequency: RecurrenceFrequency?) -> String {
-            switch frequency {
-            case .daily: return "Daily"
-            case .weekly: return "Weekly"
-            case .monthly: return "Monthly"
-            case .weekdaysOnly: return "Weekdays Only"
-            case nil: return "Custom"
-            }
+        .padding(.vertical, 6)
+        .padding(.horizontal, 8)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color("PrimaryColor"))
+        )
+    }
+    
+    func toggleTaskCompletion(taskID: UUID) {
+        if let index = tasks.firstIndex(where: { $0.id == taskID }) {
+            tasks[index].isComplete.toggle()
         }
     }
+    
+    func formattedDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .full
+        return formatter.string(from: date)
+    }
+    
+    func priorityText(for priority: Int) -> String {
+        switch priority {
+        case 0: return "No Rush"
+        case 1: return "Low"
+        case 2: return "Medium"
+        case 3: return "Urgent"
+        default: return "Unknown"
+        }
+    }
+    
+    func categoryText(_ category: TaskCategory?) -> String {
+        switch category {
+        case .work: return "Work"
+        case .personal: return "Personal"
+        case .hobbies: return "Hobbies"
+        case .fitness: return "Fitness"
+        case .family: return "Family"
+        case .other: return "Custom"
+        case nil: return "None"
+        }
+    }
+    
+    func recurrenceText(_ frequency: RecurrenceFrequency?) -> String {
+        switch frequency {
+        case .daily: return "Daily"
+        case .weekly: return "Weekly"
+        case .monthly: return "Monthly"
+        case .weekdaysOnly: return "Weekdays Only"
+        case nil: return "None"
+            
+        }
+    }
+}
 
 
 #Preview {
