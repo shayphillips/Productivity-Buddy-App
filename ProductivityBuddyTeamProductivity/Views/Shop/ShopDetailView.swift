@@ -27,6 +27,8 @@ struct ShopDetailView: View {
             Text("\(item.price)")
                 .font(.title2)
             
+            Text("Owned? \(viewModel.isOwned(item) ? "YES" : "NO")")
+            
             if !viewModel.isOwned(item) {
                 Button("BUY") {
                     viewModel.purchaseItem(item)

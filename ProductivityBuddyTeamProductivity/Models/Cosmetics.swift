@@ -15,9 +15,17 @@ enum CosmeticCategory: String, CaseIterable, Hashable {
 }
 
 struct CosmeticItem: Identifiable, Hashable {
-    let id = UUID()
     let name: String
     let category: CosmeticCategory
     let imageName: String
     let price: Int
+    var id: String { name }
+    
+    static func == (lhs: CosmeticItem, rhs: CosmeticItem) -> Bool {
+        lhs.name == rhs.name
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
+    }
 }

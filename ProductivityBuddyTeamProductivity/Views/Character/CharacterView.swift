@@ -50,7 +50,7 @@ struct CharacterView: View {
                     VStack(spacing: 15) {
                         
                         NavigationLink("Add Task") {
-                            //Text("Add Task Page Coming Soon") //Placeholder until AddTaskView.swift is ready
+                             //Placeholder until AddTaskView.swift is ready
                             AddTaskView()
                                 .environmentObject(AppViewModel())
                         }
@@ -58,7 +58,6 @@ struct CharacterView: View {
                         
                         NavigationLink("Cosmetics Shop") {
                             ShopView()
-                                .environmentObject(BuddyViewModel())
                         }
                         .buttonStyle(.bordered)
                         

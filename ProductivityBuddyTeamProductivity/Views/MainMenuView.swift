@@ -109,4 +109,5 @@ struct MainMenuView: View {
 #Preview{
     MainMenuView()
         .environmentObject(AppViewModel())
+        .environmentObject(BuddyViewModel())
 }
