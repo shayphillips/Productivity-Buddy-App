@@ -37,7 +37,7 @@ struct MainMenuView: View {
                     
                     NavigationLink {
                         DailyTasksView(selectedDate: Date())
-                            .environmentObject(appViewModel)
+                            .environmentObject(appViewModel.taskVM)
                     } label: {
                         Text("Today's Tasks")
                             .font(.title2)

@@ -28,7 +28,7 @@ struct CalenderView: View {
                         destination: DailyTasksView(
                             selectedDate: dateForDay(day)
                         )
-                        .environmentObject(appViewModel)
+                        .environmentObject(appViewModel.taskVM)
                     ) {
                         Text("\(day)")
                             .frame(width: 40, height: 40)
