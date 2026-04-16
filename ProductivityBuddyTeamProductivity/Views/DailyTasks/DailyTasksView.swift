@@ -10,11 +10,11 @@ import SwiftUI
 
 struct DailyTasksView: View {
     
-    @EnvironmentObject var appViewModel: AppViewModel
+    @EnvironmentObject var taskVM: TaskViewModel
         let selectedDate: Date
         
         var tasks: [Task] {
-            appViewModel.taskVM.tasks
+            taskVM.tasks
         }
     
     var tasksForSelectedDay: [Task] {
@@ -156,9 +156,9 @@ struct DailyTasksView: View {
     }
     
     func toggleTaskCompletion(taskID: UUID) {
-        if let index = appViewModel.taskVM.tasks.firstIndex(where: { $0.id == taskID }) {
-            appViewModel.taskVM.tasks[index].isComplete.toggle()
-            appViewModel.taskVM.saveTasks()
+        if let index = taskVM.tasks.firstIndex(where: { $0.id == taskID }) {
+            taskVM.tasks[index].isComplete.toggle()
+            taskVM.saveTasks()
         }
     }
     
@@ -205,7 +205,7 @@ struct DailyTasksView: View {
 
 #Preview {
     DailyTasksView(selectedDate: Date())
-        .environmentObject(AppViewModel())
+        .environmentObject(TaskViewModel())
 }
 
 
