@@ -14,7 +14,7 @@ enum RecurrenceFrequency: String, Codable{
          weekdaysOnly
 }
 
-enum TaskCategory: String, Codable {
+enum TaskCategory: String, Codable, CaseIterable {
     case work,
          personal,
          hobbies,
@@ -39,10 +39,10 @@ struct Task: Identifiable, Codable {
     
     
     // Only have to have title for task upon creation
-    init(title: String, dueDate: Date = Date(), taskRecurring: Bool = false, taskPriority: Int = 0, pointsToAward: Int = 0, isComplete: Bool = false) {
+    init(title: String, dueDate: Date = Date(), category: TaskCategory? = nil, taskRecurring: Bool = false, taskPriority: Int = 0, pointsToAward: Int = 0, isComplete: Bool = false) {
         self.title = title
         self.dueDate = dueDate
-        
+        self.category = category
         self.taskRecurring = taskRecurring
         self.taskPriority = taskPriority
         self.pointsToAward = pointsToAward

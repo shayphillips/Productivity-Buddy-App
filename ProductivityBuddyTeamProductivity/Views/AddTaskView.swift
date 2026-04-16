@@ -20,6 +20,7 @@ struct AddTaskView: View{
     @State private var date: Date = .now
     @State private var pointsToAward: Int = 0
     
+    
     var body: some View {
         ZStack{
             Color("Background")
@@ -37,6 +38,14 @@ struct AddTaskView: View{
                         displayedComponents: [.date, .hourAndMinute]
                     )
                     
+                    Picker("Category", selection: $category) {
+                        Text("None").tag(TaskCategory?.none)
+                        
+                        ForEach(TaskCategory.allCases, id: \.self) { category in
+                            Text(category.rawValue.capitalized).tag(Optional(category))
+                        }
+                    }
+                    
                     Picker("Priority", selection: $priority) {
                         Text("0 - No Rush").tag(0)
                         Text("1 - Low").tag(1)
@@ -53,6 +62,7 @@ struct AddTaskView: View{
                         let newTask = Task(
                             title: title,
                             dueDate: date,
+                            category: category,
                             taskPriority: priority,
                             pointsToAward: pointsToAward,
                             isComplete: false
