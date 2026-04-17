@@ -17,7 +17,7 @@ struct ShopView: View {
                 .font(.largeTitle)
                 .bold()
             
-            Text("Your Points: \(viewModel.points)")
+            Text("Your Points: \(Points.shared.value)")
                 .font(.headline)
             
             ScrollView {

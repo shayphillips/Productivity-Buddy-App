@@ -10,7 +10,11 @@ import Combine
 
 class BuddyViewModel: ObservableObject{
     @Published var buddy = Buddy()
-    @Published var points: Int = 250 // change to be whatever amount player has
+    @EnvironmentObject var points: Points
+
+    var body: some View {
+        Text("Points: \(points.value)")
+    }
     
     //Shop Items
     //This is where you add new items
@@ -20,10 +24,10 @@ class BuddyViewModel: ObservableObject{
     ]
     func purchaseItem(_ item: CosmeticItem) {
         print("Buying \(item.name)")
-        guard points >= item.price else { return }
+        guard Points.shared.value >= item.price else { return }
         guard !isOwned(item) else { return }
         
-        points -= item.price
+        Points.shared.add(-item.price)
         buddy.buddyCosmetics.insert(item)
         print("Owned now:", buddy.buddyCosmetics.map { $0.name})
     }

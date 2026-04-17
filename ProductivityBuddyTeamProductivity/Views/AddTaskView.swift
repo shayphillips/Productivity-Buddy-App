@@ -108,4 +108,5 @@ struct AddTaskView: View{
 #Preview {
     AddTaskView()
         .environmentObject(AppViewModel())
+        .environmentObject(Points.shared)
 }

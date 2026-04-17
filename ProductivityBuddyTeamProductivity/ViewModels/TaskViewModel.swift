@@ -9,6 +9,11 @@ import Combine
 
 class TaskViewModel: ObservableObject{
     @Published var tasks: [Task] = []
+    @EnvironmentObject var points: Points
+
+    var body: some View {
+        Text("Points: \(points.value)")
+    }
     
     func addTask(newTask: Task){
         // Pass a task instead of task properties to simplfy function
@@ -19,6 +24,7 @@ class TaskViewModel: ObservableObject{
         // Find the task by id and mark it complete
         if let index = tasks.firstIndex(where: { $0.id == id }) {
             tasks[index].isComplete = true
+            Points.shared.add(tasks[index].pointsToAward)
             
             if tasks[index].taskRecurring{
                 handleRecurrence(for: tasks[index])

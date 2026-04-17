@@ -110,4 +110,5 @@ struct MainMenuView: View {
     MainMenuView()
         .environmentObject(AppViewModel())
         .environmentObject(BuddyViewModel())
+        .environmentObject(Points.shared)
 }

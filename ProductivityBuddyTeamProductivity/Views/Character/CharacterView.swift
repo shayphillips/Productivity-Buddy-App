@@ -10,7 +10,8 @@ import SwiftUI
 
 struct CharacterView: View {
     
-    @EnvironmentObject var viewModel: BuddyViewModel //Whole app should now have shared points, cosmetics, and equpped items
+    @EnvironmentObject var viewModel: BuddyViewModel //Whole app should now have shared cosmetics, and equpped items
+    @EnvironmentObject var points: Points 
     
     var body: some View {
             NavigationStack {
@@ -21,7 +22,7 @@ struct CharacterView: View {
                         .fontWeight(.bold)
                     
                     // Points display
-                    Text("Points: \(viewModel.points)")
+                    Text("Points: \(points.value)")
                         .font(.title2)
                         .foregroundColor(.green)
                     
@@ -95,4 +96,5 @@ struct CharacterView: View {
 #Preview {
     CharacterView()
         .environmentObject(BuddyViewModel())
+        .environmentObject(Points.shared)
 }

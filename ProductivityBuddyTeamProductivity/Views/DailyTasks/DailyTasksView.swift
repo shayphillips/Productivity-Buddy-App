@@ -10,6 +10,7 @@ import SwiftUI
 
 struct DailyTasksView: View {
     
+    @EnvironmentObject var points: Points
     @EnvironmentObject var taskVM: TaskViewModel
         let selectedDate: Date
         
@@ -33,9 +34,9 @@ struct DailyTasksView: View {
         completedTasks.count
     }
     
-    var totalPointsEarned: Int {
-        completedTasks.map { $0.pointsToAward }.reduce(0, +)
-    }
+//    var totalPointsEarned: Int {
+//        completedTasks.map { $0.pointsToAward }.reduce(0, +)
+//    }
     
     var body: some View {
         ZStack {
@@ -53,7 +54,7 @@ struct DailyTasksView: View {
                         .font(.subheadline)
                         .foregroundColor(Color("Accent"))
                     
-                    Text("Points Earned: \(totalPointsEarned)")
+                    Text("Points: \(points.value)")
                         .font(.subheadline)
                         .foregroundColor(.green)
                 }
@@ -157,8 +158,14 @@ struct DailyTasksView: View {
     
     func toggleTaskCompletion(taskID: UUID) {
         if let index = taskVM.tasks.firstIndex(where: { $0.id == taskID }) {
-            taskVM.tasks[index].isComplete.toggle()
-            taskVM.saveTasks()
+            if taskVM.tasks[index].isComplete {
+                // If you want to support unchecking without refund:
+                taskVM.tasks[index].isComplete = false
+                taskVM.saveTasks()
+            } else {
+                taskVM.completeTask(id: taskID) // awards points here
+                taskVM.saveTasks()
+            }
         }
     }
     
@@ -206,6 +213,5 @@ struct DailyTasksView: View {
 #Preview {
     DailyTasksView(selectedDate: Date())
         .environmentObject(TaskViewModel())
+        .environmentObject(Points.shared)
 }
-
-

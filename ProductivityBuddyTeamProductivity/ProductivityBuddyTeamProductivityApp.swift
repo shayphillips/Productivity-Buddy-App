@@ -17,6 +17,7 @@ struct ProductivityBuddyTeamProductivityApp: App {
             MainMenuView()
                 .environmentObject(appViewModel)
                 .environmentObject(viewModel)
+                .environmentObject(Points.shared)
         }
     }
 }
