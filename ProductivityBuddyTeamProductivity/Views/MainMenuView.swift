@@ -6,7 +6,7 @@
 //
 // This is the MainMenu View. This is the starting point that the app opens up to and gives users three options, go to their daily tasks, their calender, and their character.
 
-// TO BE IMPLEMENTED: Stylizing, settings view and options(questionable?)
+
 import SwiftUI
 
 struct MainMenuView: View {
