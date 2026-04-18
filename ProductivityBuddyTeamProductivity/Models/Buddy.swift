@@ -10,7 +10,5 @@ struct Buddy {
     var buddyLevel: Int = 0 //Leveling up your buddy (we can remove if we want to)
     var buddyName: String = "Unknown"
     
-    var buddyCosmetics: Set<CosmeticItem> = []// List of all Cosmetics buddy has unlocked
-    var buddyCosmeticsActive: [CosmeticCategory: CosmeticItem] = [:] // List of cometics currently being used.
 }
 
