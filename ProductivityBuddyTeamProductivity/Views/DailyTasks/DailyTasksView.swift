@@ -43,6 +43,7 @@ struct DailyTasksView: View {
             Color("Background")
                 .ignoresSafeArea()
             
+            
             VStack(alignment: .leading, spacing: 16) {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Tasks for \(formattedDate(selectedDate))")

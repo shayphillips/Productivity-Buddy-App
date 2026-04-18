@@ -25,7 +25,8 @@ struct AddTaskView: View{
         ZStack{
             Color("Background")
                 .ignoresSafeArea()
-            
+        
+
             Form {
                 Section("Task Info") {
                     TextField("Enter task name", text: $title)

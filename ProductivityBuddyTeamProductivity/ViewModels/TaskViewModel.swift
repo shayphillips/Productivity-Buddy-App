@@ -8,7 +8,11 @@ import SwiftUI
 import Combine
 
 class TaskViewModel: ObservableObject{
-    @Published var tasks: [Task] = []
+    @Published var tasks: [Task] = [
+        // Example tasks for testing purposes
+        Task(title: "Example Task 1", dueDate: .now, category: nil, taskPriority: 0, pointsToAward: 200, isComplete: false),
+        Task(title: "Example Task 2", dueDate: .now, category: nil, taskPriority: 0, pointsToAward: 200, isComplete: false)
+    ]
     @EnvironmentObject var points: Points
 
     var body: some View {
